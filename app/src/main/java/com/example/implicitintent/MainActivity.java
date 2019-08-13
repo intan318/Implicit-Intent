@@ -66,8 +66,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intentNotif);
                 break;
             case R.id.btnSms:
+                Intent intentSMS = new Intent (MainActivity.this, SmsActivity.class);
+                startActivity(intentSMS);
                 break;
             case R.id.btnWifi:
+                Intent intentWifi = new Intent (MainActivity.this, WifiActivity.class);
+                startActivity(intentWifi);
                 break;
             case R.id.btnBrowser:
                 break;

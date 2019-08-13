@@ -3,6 +3,7 @@ package com.example.implicitintent;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -86,10 +88,45 @@ public class SmsActivity extends AppCompatActivity {
                     Toast.makeText(this, "Tidak Boleh Kosong", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intentToSMSApp = new Intent (Intent.ACTION_SENDTO);
+                    intentToSMSApp.setData(Uri.parse("smsto:" + Uri.encode(noTelp)));
+                    intentToSMSApp.putExtra("sms_body", bodySMS);
                     startActivity(intentToSMSApp);
                 }
 
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 ) {
+            if (resultCode == RESULT_OK) {
+                Cursor cursor = null;
+                Uri uri = data.getData();
+
+                cursor = getContentResolver().query(uri, new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME},
+                        null,
+                        null,
+                        null);
+
+                if (cursor != null && cursor.moveToNext()) {
+                    String nama = cursor.getString(1);
+                    String noTelp = cursor.getString(0);
+
+                    etNomorTujuan.setText(noTelp);
+                }
+            }
+        }
+
+        if (requestCode == 2){
+            if (resultCode == RESULT_OK){
+                Toast.makeText(this, "permission sms diaktifkan", Toast.LENGTH_SHORT).show();
+            } else if (resultCode==RESULT_CANCELED){
+                Toast.makeText(this, "permission batal", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
     }
 }
