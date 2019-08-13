@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnAlarm:
+                Intent intentAlarm = new Intent (MainActivity.this, AlarmActivity.class);
+                startActivity(intentAlarm);
                 break;
             case R.id.btnAudio:
                 Intent i = new Intent (MainActivity.this, AudioManagerActivity.class);
